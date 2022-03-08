@@ -1,16 +1,18 @@
 #include "WebSerEpoll.h"
 
-const int LISTENNUMBER = 1024;
-const int MAXEVENTS = 5000;
+#include <unistd.h>
+#include <errno.h>
+#include <stdio.h>
 
 WebSerEpoll::~WebSerEpoll()
 {
 	WebSerEpollResource();
 }
 
-WebSerEpoll::WebSerEpollInit()
+int WebSerEpoll::WebSerEpollInit()
 {
-	int m_nEpollFd = epoll_create(1);
+	m_nEpollFd = epoll_create(1);
+	printf("WebSerEpoll:%d \n",m_nEpollFd);
 	if(m_nEpollFd == -1)
 		return -1;
 	events = new epoll_event[MAXEVENTS];
@@ -42,7 +44,7 @@ int WebSerEpoll::WebSerEpollAdd(int nEpollFd,int nFd, void* pRequest, __uint32_t
 	struct epoll_event event;
 	event.data.ptr = pRequest;
 	event.events = events;
-	if(epoll_ctl(nEpollFd,EPOLL_CTL_ADD,nFd,&events) < 0)
+	if(epoll_ctl(nEpollFd,EPOLL_CTL_ADD,nFd,&event) < 0)
 	{
 		perror("epoll add error");
 		return -1;
@@ -55,9 +57,9 @@ int WebSerEpoll::WebSerEpollMod(int nEpollFd,int nFd, void* pRequest, __uint32_t
 	struct epoll_event event;
 	event.data.ptr = pRequest;
 	event.events = events;
-	if(epoll_ctl(nEpollFd,EPOLL_CTL_MOD,nFd,&events) < 0)
+	if(epoll_ctl(nEpollFd,EPOLL_CTL_MOD,nFd,&event) < 0)
 	{
-		perror("epoll add error");
+		perror("epoll mod error");
 		return -1;
 	}
 	return 0;
@@ -69,7 +71,7 @@ int WebSerEpoll::WebSerEpollDelete(int nEpollFd,int nFd, void* pRequest, __uint3
 	struct epoll_event event;
 	event.data.ptr = pRequest;
 	event.events = events;
-	if(epoll_ctl(nEpollFd,EPOLL_CTL_DEL,nFd,&events) < 0)
+	if(epoll_ctl(nEpollFd,EPOLL_CTL_DEL,nFd,&event) < 0)
 	{
 		perror("epoll add error");
 		return -1;
@@ -79,8 +81,8 @@ int WebSerEpoll::WebSerEpollDelete(int nEpollFd,int nFd, void* pRequest, __uint3
 
 int WebSerEpoll::WebSerEpollWaitCount()
 {
-	int nCount = epoll_wait(nEpollFd, events, MAXEVENTS, timeout);
-	if(nRet < 0 )
+	int nCount = epoll_wait(m_nEpollFd, events, MAXEVENTS, 500);
+	if(nCount < 0 )
 	{
 		perror("epoll wait error");
 	}
