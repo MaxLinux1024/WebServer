@@ -9,6 +9,16 @@
 #include "WebSerUtil.h"
 #include "WebServerDefine.h"
 
+void myHandler1()
+{
+    printf("num:1111 \n");
+}
+
+void myHandler(std::shared_ptr<void> req)
+{
+    std::shared_ptr<WebSerRequestData> request = std::static_pointer_cast<WebSerRequestData>(req);
+    request->WebSerHandleRequest();
+}
 WebServerEpoll::~WebServerEpoll()
 {
 
@@ -82,13 +92,10 @@ void WebServerEpoll::WebSerEpollWait(int nListenFd, int nMaxEvents, int nTimeOut
     std::vector<std::shared_ptr<WebSerRequestData>> pRequestData = WebSerGetEventsRequest(nListenFd,nEventCount, m_strPath);
     if(pRequestData.size() > 0)
     {
-        //printf("vector size%d \n",pRequestData.size());
         for(auto& RequestData:pRequestData)
         {
-            if(WebSerThreadPool::GetInstance()->WebSerThreadPoolAddTask(RequestData) < 0)
-            {
-                break;
-            }
+            WebSerThreadPool::GetInstance()->WebSerThreadPoolAddTask(myHandler,RequestData);
+            //WebSerThreadPool::GetInstance()->WebSerThreadPoolAddTask1(myHandler1);
         }
     }
 }

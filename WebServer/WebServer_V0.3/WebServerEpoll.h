@@ -11,6 +11,12 @@
 #include <sys/epoll.h>
 #include <memory>
 
+//void myHandlerNew(std::shared_ptr<void> req)
+//{
+//    std::shared_ptr<WebSerRequestData> request = std::static_pointer_cast<WebSerRequestData>(req);
+//    request->WebSerHandleRequest();
+//}
+
 class WebServerEpoll {
 public:
     WebServerEpoll() = default;

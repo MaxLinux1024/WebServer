@@ -41,7 +41,7 @@ std::string WebSerMimeType::WebSerGetMime(const std::string &strSuffix) {
             m_mapMime[".gif"] = "image/gif";
             m_mapMime[".gz"] = "application/x-gzip";
             m_mapMime[".pdf"] = "application/pdf";
-	    m_mapMime[".htm"] = "text/html";
+	        m_mapMime[".htm"] = "text/html";
             m_mapMime[".ico"] = "application/x-ico";
             m_mapMime[".jpg"] = "image/jpeg";
             m_mapMime[".png"] = "image/png";
@@ -49,9 +49,9 @@ std::string WebSerMimeType::WebSerGetMime(const std::string &strSuffix) {
             m_mapMime[".mp3"] = "audio/mp3";
             m_mapMime[".json"] = "application/json;charset=UTF-8";
             m_mapMime[".pptx"] = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-	    m_mapMime[".js"] = "application/javascript;charset=UTF-8";
-	    //m_mapMime["default"] = "text/html";
-	    m_mapMime["default"] = "text/plain";
+	        m_mapMime[".js"] = "application/javascript;charset=UTF-8";
+	        //m_mapMime["default"] = "text/html";
+	        m_mapMime["default"] = "text/plain";
         
 	}
         pthread_mutex_unlock(&m_lock);
@@ -513,7 +513,6 @@ int WebSerRequestData::WebSerAnalysisRequest() {
         int src_fd = open(m_strFileName.c_str(), O_RDONLY, 0);
         char *src_addr = static_cast<char *>(mmap(NULL, sbuf.st_size, PROT_READ, MAP_PRIVATE, src_fd, 0));
         close(src_fd);
-	printf("src:%s \n",src_addr);
         // 发送文件并校验完整性
         send_len = writen(m_nFd, src_addr, sbuf.st_size);
         if (send_len != sbuf.st_size) {

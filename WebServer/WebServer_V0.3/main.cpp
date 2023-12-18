@@ -78,11 +78,12 @@ int main(int argc,char* argv[]) {
         perror("epoll init failed");
         return 1;
     }
-    if (WebSerThreadPool::GetInstance()->WebSerCreateThreadPool(nThreadPool, QUEUE_SIZE) < 0) {
+    if (WebSerThreadPool::GetInstance()->WebSerCreateThreadPool(nThreadPool, 32) < 0) {
+    //if (WebSerThreadPool::GetInstance()->WebSerCreateThreadPool() < 0) {
         printf("Threadpool create failed\n");
         return 1;
     }
-    int nListenFd = SocketBindListen(PORT);
+    int nListenFd = SocketBindListen(8888);
     //printf("listen:%d \n",nListenFd);
     if (nListenFd < 0) {
         perror("socket bind failed");
